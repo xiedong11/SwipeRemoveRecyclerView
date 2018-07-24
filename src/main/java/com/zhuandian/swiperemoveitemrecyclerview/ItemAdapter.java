@@ -26,13 +26,13 @@ import java.util.List;
  */
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHodler> {
 
-    private List<String> mdatas;
+    private List<ItemEntity> mdatas;
     private Context context;
     private OnSwipeItemDelClickListener onSwipeItemDelClickListener;
     private boolean isAllowSwipe = false;
 
 
-    public ItemAdapter(List<String> mdatas, Context context) {
+    public ItemAdapter(List<ItemEntity> mdatas, Context context) {
         this.mdatas = mdatas;
         this.context = context;
     }
@@ -52,7 +52,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHodler> {
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(metrics);
         final int width = metrics.widthPixels;     // 屏幕宽度（像素）
         holder.tvContent.setLayoutParams(new LinearLayout.LayoutParams(width, LinearLayout.LayoutParams.MATCH_PARENT));
-        holder.tvContent.setText(mdatas.get(position));
+        holder.tvContent.setText(mdatas.get(position).getContent());
 
         //设置是否运行滚动
         holder.rootView.setOnTouchListener(new View.OnTouchListener() {
@@ -74,7 +74,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHodler> {
             @Override
             public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 System.out.println("------------" + holder.tvDel.getWidth() + "-------" + scrollX + "-----" + oldScrollX);
-                if (scrollX > holder.tvDel.getWidth() / 2) {
+                mdatas.get(position).setOpen(true);
+                if (scrollX > holder.tvDel.getWidth() / 2 && mdatas.get(position).isOpen()) {
                     holder.rootView.smoothScrollBy(width + holder.tvDel.getWidth(), 0);
                 } else {
                     holder.rootView.smoothScrollBy(0, 0);
